@@ -31,18 +31,21 @@ router.get("/:userId", async (req,res)=>{
 });
 
 
-router.put("/:id", async (req,res)=>{
+router.put("/:id", async (req, res) => {
+    const { title, content } = req.body;
 
-    const {title,content} = req.body;
+    try {
+        const updatedNote = await Note.findByIdAndUpdate(
+            req.params.id,
+            { title, content },
+            { returnDocument: "after" }
+        );
 
-    const note = await Note.findByIdAndUpdate(
-        req.params.id,
-        {title,content},
-        {new:true}
-    );
+        res.json({ success: true, note: updatedNote });
 
-    res.json(note);
-
+    } catch (err) {
+        res.status(500).json({ message: "Server Error" });
+    }
 });
 
 
