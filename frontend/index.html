@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome | To-Do App</title>
+<link rel="stylesheet" href="index.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">
+        <i class="fa-solid fa-list-check"></i> MyToDo
+    </div>
+
+    <div class="nav-buttons">
+        <a href="#" class="btn login" onclick="openModal('login')">Login</a>
+        <a href="#" class="btn register" onclick="openModal('register')">Register</a>
+    </div>
+</nav>
+
+<section class="hero">
+    <h1>Let’s Start Your To-Do List</h1>
+    <p>Organize your tasks. Boost your productivity.</p>
+    <a href="#" class="start-btn" onclick="openModal('register')">Get Started</a>
+</section>
+
+<div id="authModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+ 
+        <h2 id="formTitle">Login</h2>
+
+        <input type="text" id="nameField" placeholder="Full Name" style="display:none;">
+        <input type="text" id="emailField" placeholder="Email">
+        <input type="password" id="passwordField" placeholder="Password">
+
+        <button onclick="handleAuth()">Submit</button>
+
+        <p id="switchText">
+            Don't have an account?
+            <a href="#" onclick="switchForm()">Register</a>
+        </p>
+    </div>
+</div>
+
+<script>
+
+function openModal(type) {
+    document.getElementById("authModal").style.display = "flex";
+
+    let nameField = document.getElementById("nameField");
+
+    if(type === "register"){
+        document.getElementById("formTitle").innerText = "Register";
+        nameField.style.display = "block";  
+        document.getElementById("switchText").innerHTML =
+            'Already have an account? <a href="#" onclick="switchForm()">Login</a>';
+    } else {
+        document.getElementById("formTitle").innerText = "Login";
+        nameField.style.display = "none";  
+        document.getElementById("switchText").innerHTML =
+            'Don\'t have an account? <a href="#" onclick="switchForm()">Register</a>';
+    }
+}
+
+function closeModal() {
+    document.getElementById("authModal").style.display = "none";
+}
+
+function switchForm() {
+    let title = document.getElementById("formTitle");
+
+    if(title.innerText === "Login"){
+        openModal("register");
+    } else {
+        openModal("login");
+    }
+}
+
+async function handleAuth() {
+
+    const name = document.getElementById("nameField").value;
+    const email = document.getElementById("emailField").value;
+    const password = document.getElementById("passwordField").value;
+
+    const formTitle = document.getElementById("formTitle").innerText;
+
+    if(formTitle === "Register") {
+
+        const response = await fetch("http://localhost:5000/api/auth/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, email, password })
+        });
+
+        const data = await response.json();
+
+        if(data.success){
+            alert("Registered Successfully!");
+            localStorage.setItem("userId", data.userId);
+            window.location.href="to_do.html"
+            openModal("login");
+        } else {
+            alert(data.message);
+        }
+
+    } else {
+
+        const response = await fetch("http://localhost:5000/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if(data.success){
+            alert("Login Successful!");
+            localStorage.setItem("userId", data.userId);
+            window.location.href = "to_do.html";
+        } else {
+            alert(data.message);
+        }
+    }
+}
+
+</script>
+
+</body>
+</html>
