@@ -1,7 +1,7 @@
 
-# To-Do Appication
+# To-Do Application
 
-A Full Stack To-Do Application where users can create, edit, search, and delete notes.
+A **Full Stack To-Do Application** where users can register, log in, and manage their notes. Users can create, edit, search, and delete notes with a clean UI and dark mode support.
 
 ## Tech Stack
 
