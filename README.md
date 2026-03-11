@@ -27,15 +27,5 @@ Database
 - Search Notes
 - Dark Mode
 
-## Project Structure
 
-backend/
-- models
-- routes
-- config
-
-frontend/
-- HTML
-- CSS
-- JS
 
